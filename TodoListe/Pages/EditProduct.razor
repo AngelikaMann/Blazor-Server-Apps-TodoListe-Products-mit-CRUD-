@@ -1,0 +1,56 @@
+﻿@page "/editProduct/{id}"
+
+<h3>EditProduct</h3>
+
+<form>
+    <div class="row">
+        <input hidden class="form-control" @bind="@product.Id" />
+
+        <div class="col-md-2">
+            <label class="control-label">Name</label>
+            <input class="form-control" @bind="@product.Name" />
+        </div>
+        <div class="col-md-2">
+            <label class="control-label">Anzahl</label>
+            <input class="form-control" @bind="@product.Anzahl" />
+        </div>
+        <div class="col-md-2">
+            <label class="control-label">Category</label>
+            <input class="form-control" @bind="@product.Category" />
+        </div>
+
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <div class="form-group ">
+                <button type="button" class="btn btn-primary" @onclick="@UpdateProduct">Update</button>
+                <button type="button" class="btn btn-danger" @onclick="@Cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Product product = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        product = await productService.GetProduct(Convert.ToInt32(Id));
+
+    }
+    protected async void UpdateProduct()
+    {
+        await productService.UpdateProduct(product);
+
+        navigationManager.NavigateTo("Products");
+    }
+    void Cancel()
+    {
+        navigationManager.NavigateTo("Products");
+    }
+}

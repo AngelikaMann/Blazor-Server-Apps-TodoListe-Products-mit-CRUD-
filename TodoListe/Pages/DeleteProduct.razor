@@ -1,0 +1,45 @@
+﻿@page "/deleteProduct/{id}"
+
+
+
+<h3> Möchtest du der Product wirklich löschen?</h3>
+<form>
+    <div class="row">
+        <input hidden disabled class="form-control" @bind="@product.Id" />
+        <div class="col-md-4">
+            <label class="control-label">Name</label>
+            <input disabled class="form-control" @bind="@product.Name" />
+        </div>        
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <div class="form-group ">
+                <button type="button" class="btn btn-primary" @onclick="@Delete">Delete</button>
+                <button type="button" class="btn btn-danger" @onclick="@Cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Product product = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        product = await productService.GetProduct(Convert.ToInt32(Id));
+
+    }
+    protected async void Delete()
+    {
+        await productService.DeleteProduct(product);
+
+        navigationManager.NavigateTo("Products");
+    }
+    void Cancel()
+    {
+        navigationManager.NavigateTo("Products");
+    }
+}

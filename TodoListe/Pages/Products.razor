@@ -1,0 +1,73 @@
+﻿@page "/products"
+
+@using TodoListe.Data 
+@inject ProductService productService
+
+
+
+<h3>Products</h3>
+
+<a href="AddProduct" class="btn btn-primary my-3">+ Product</a>
+@if (allProducts==null)
+{
+    <p>Loading Data...</p>
+}else
+{
+    <table id="table_id" class="table table-bordered table-hover table-striped col-md-6 ">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th> 
+            <th>
+                Name
+            </th>
+            <th>
+                Anzahl
+            </th>
+            <th>
+                Category
+            </th>
+            <th class="text-center">
+                 Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product product in allProducts )
+        {
+           <tr>
+               <td>
+                  @product.Id
+               </td>
+               <td>
+                  @product.Name
+               </td>
+               <td>
+                  @product.Anzahl
+               </td>
+               <td>
+                  @product.Category
+               </td>
+               <td class ="text-center">
+                 <a class="btn btn-sm btn-secondary" href="EditProduct/@product.Id">Edit</a>
+                 <a class="btn btn-sm btn-danger"  href="DeleteProduct/@product.Id">Delete</a>
+               </td>
+           </tr> 
+        }
+
+    </tbody>
+</table>  
+}
+
+
+@code {
+    List<Product> allProducts;
+
+    protected override async Task OnInitializedAsync()
+    {
+      await base.OnInitializedAsync();
+
+        allProducts = await productService.GetAllProducts();
+    }    
+}
